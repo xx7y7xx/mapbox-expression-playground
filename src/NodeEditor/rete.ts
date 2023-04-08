@@ -14,6 +14,8 @@ import ContextMenuPlugin from 'rete-context-menu-plugin';
 import { LS_KEY_NODE_EDITOR_DATA, NODE_EDITOR_ID } from '../constants';
 import ConcatComponent from './ConcatComponent';
 import { loadConfig, reteContextMenuOptions } from './helpers';
+import JsonComponent from './JsonComponent';
+import GetComponent from './GetComponent';
 
 type WindowNodeMapProp = {
   editor?: NodeEditor;
@@ -38,6 +40,8 @@ export async function createEditor(container: HTMLDivElement) {
 
   const allComponents: any = {
     [ConcatComponent.key]: new ConcatComponent(),
+    [GetComponent.key]: new GetComponent(),
+    [JsonComponent.key]: new JsonComponent(),
   };
   window.___nodeMap.allComponents = allComponents;
   Object.keys(allComponents).forEach((key) => {
