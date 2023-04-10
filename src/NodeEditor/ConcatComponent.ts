@@ -1,7 +1,9 @@
 import Rete, { Component, Node } from 'rete';
+import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/types/core/data';
+
 import { objectSocket } from './JsonComponent';
 import ButtonControl from './ButtonControl';
-import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/types/core/data';
+import Expression from './Expression';
 
 const KEY = 'Concat';
 
@@ -22,9 +24,7 @@ export default class ConcatComponent extends Component {
     node.data.inputCount = 0;
 
     const onClick = () => {
-      node.addInput(
-        new Rete.Input(`json${index}`, `JSON ${index}`, objectSocket),
-      );
+      node.addInput(new Rete.Input(`json${index}`, `JSON ${index}`, objectSocket));
       index += 1;
       (node.data.inputCount as number) += 1;
       node.update(); // Rerender ConcatComponent
@@ -33,9 +33,7 @@ export default class ConcatComponent extends Component {
     // Add input
     // @ts-ignore
     [...Array(initCount).keys()].forEach(() => {
-      node.addInput(
-        new Rete.Input(`json${index}`, `JSON ${index}`, objectSocket),
-      );
+      node.addInput(new Rete.Input(`json${index}`, `JSON ${index}`, objectSocket));
       index += 1;
       (node.data.inputCount as number) += 1;
     });
@@ -44,20 +42,25 @@ export default class ConcatComponent extends Component {
       new ButtonControl(this.editor, 'addInputSocket', {
         text: 'Add Input Socket',
         onClick,
-      }),
+      })
     );
   }
 
   worker(node: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
-    let out: any[] = [];
+    let out = '';
 
-    Object.keys(inputs)
+    const values = Object.keys(inputs)
       .filter((key) => inputs[key].length) // filter out input socket which has no data input
       .filter((key) => inputs[key][0]) // when line remove from node, inputs[key]=[undefined]
-      .forEach((key) => {
-        const inputValue = inputs[key].length ? inputs[key][0] : node.data[key];
-        out = [...out, ...(inputValue as any)];
-      });
+      .map((key) => (inputs[key].length ? inputs[key][0] : node.data[key]));
+
+    if (localStorage.getItem('code')) {
+      out = `['concat', ${values.join(', ')}]`;
+    } else {
+      out = Expression.parse(['concat', ...values]).evaluate();
+    }
+
+    console.log('xxx333', inputs, out);
 
     outputs.json = out;
   }

@@ -31,21 +31,25 @@ export default class GetComponent extends Component {
   }
 
   worker(node: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
-    let out: any[] = [];
-
-    const geojsonObj = inputs[INPUT_KEY][0] as GeoJSON.FeatureCollection | GeoJSON.Feature;
-
     const propertyFieldName = node.data[CONTROL_KEY_GET];
 
-    if (geojsonObj.type === 'FeatureCollection') {
-      geojsonObj.features.forEach((f) => {
-        const result = Expression.parse(['get', propertyFieldName]).evaluate(f);
-        out.push(result);
-      });
+    let out = '';
+    if (localStorage.getItem('code')) {
+      out = `['get', '${propertyFieldName}']`;
     } else {
-      const result = Expression.parse(['get', propertyFieldName]).evaluate(geojsonObj);
-      out.push(result);
+      const geojsonObj = inputs[INPUT_KEY][0] as GeoJSON.FeatureCollection | GeoJSON.Feature;
+
+      if (geojsonObj.type === 'FeatureCollection') {
+        geojsonObj.features.forEach((f) => {
+          const result = Expression.parse(['get', propertyFieldName]).evaluate(f);
+          out = result;
+        });
+      } else {
+        const result = Expression.parse(['get', propertyFieldName]).evaluate(geojsonObj);
+        out = result;
+      }
     }
+
     console.log('xxxx2', out);
 
     outputs.json = out;

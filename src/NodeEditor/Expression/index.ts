@@ -61,7 +61,7 @@ export default class Expression<T> {
 
   constructor(public parsedExpression: expression.StyleExpression) {}
 
-  evaluate(feature: Feature): T {
+  evaluate(feature?: Feature): T {
     return this.parsedExpression.evaluate(expressionGlobals, feature);
   }
 }
