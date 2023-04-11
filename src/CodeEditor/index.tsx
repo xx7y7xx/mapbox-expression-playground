@@ -6,7 +6,7 @@ const defaultFeature = `{
   "type": "Feature",
   "properties": {
     "foo": "bar",
-    "foo2": "bar2"
+    "foo2": "bar3"
   },
   "geometry": {
     "coordinates": [
