@@ -3,7 +3,7 @@ import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/types/core/data';
 
 import { objectSocket } from './JsonComponent';
 import ButtonControl from './ButtonControl';
-import Expression from './Expression';
+import Expression from '../Expression';
 
 const KEY = 'Concat';
 

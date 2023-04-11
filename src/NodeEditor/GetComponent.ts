@@ -3,7 +3,7 @@ import Rete, { Component, Node } from 'rete';
 import { objectSocket } from './JsonComponent';
 import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/types/core/data';
 import ExpressionControl from './ExpressionControl';
-import Expression from './Expression';
+import Expression from '../Expression';
 
 const KEY = 'Get';
 const INPUT_KEY = 'json';
@@ -49,8 +49,6 @@ export default class GetComponent extends Component {
         out = result;
       }
     }
-
-    console.log('xxxx2', out);
 
     outputs.json = out;
   }
