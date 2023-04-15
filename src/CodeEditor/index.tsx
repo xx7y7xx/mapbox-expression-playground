@@ -1,9 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { Col, Row, Tooltip } from 'antd';
+import { Expression as MapboxExpression } from 'mapbox-gl';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Feature, FeatureCollection } from 'geojson';
+
 import { AppContext } from '../AppContext';
 import Expression from '../Expression';
 import { LS_KEY_CODE_EDITOR_EXPRESSION } from '../constants';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const defaultExpression = `['concat',
   ['get', 'foo'],
@@ -20,7 +23,7 @@ export default function CodeEditor() {
   const [runError, setRunError] = useState<string | null>(null);
 
   const handleRun = () => {
-    let geojsonObj = null;
+    let geojsonObj: FeatureCollection | Feature | null = null;
     try {
       geojsonObj = JSON.parse(geojson);
       setGeojsonError(null);
@@ -29,7 +32,7 @@ export default function CodeEditor() {
       setGeojsonError('[ERROR] Failed to parse JSON: ' + (err as Error).message);
     }
 
-    let expr = null;
+    let expr: MapboxExpression | null = null;
     try {
       // eslint-disable-next-line no-eval
       expr = eval(expression);
@@ -42,15 +45,28 @@ export default function CodeEditor() {
     if (!geojsonObj) {
       return;
     }
-    if (expr === null) {
+    if (!expr) {
       return;
     }
 
     console.debug('CodeEditor Expression.parse', expr);
     console.debug('CodeEditor Expression.evaluate', geojsonObj);
     try {
-      const result = Expression.parse(expr).evaluate(geojsonObj);
-      setResult(String(result));
+      const fc =
+        geojsonObj.type === 'FeatureCollection'
+          ? geojsonObj
+          : {
+              type: 'FeatureCollection',
+              features: [geojsonObj],
+            };
+      const results: string[] = [];
+
+      fc.features.forEach((f) => {
+        const result = Expression.parse(expr!).evaluate(f);
+        results.push(String(result));
+      });
+
+      setResult(results.join('\n'));
       setRunError(null);
     } catch (err) {
       console.debug('[ERROR] Failed to evaluate expression', err);
