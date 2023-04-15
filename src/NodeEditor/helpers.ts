@@ -55,17 +55,17 @@ export const reteContextMenuOptions = {
   searchKeep: () => true,
   delay: 100,
   allocate(/*component*/) {
-    // console.log('allocate(component)', component);
+    // console.debug('allocate(component)', component);
     return ['Submenu'];
   },
   rename(component: Component) {
     return component.name;
   },
   items: {
-    // 'Click me': () => { console.log('Works!'); },
+    // 'Click me': () => { console.debug('Works!'); },
   },
   nodeItems: {
-    // 'Click me': () => { console.log('Works for node!'); },
+    // 'Click me': () => { console.debug('Works for node!'); },
     Delete: true, // delete this node
     Clone: true, // clone this node
   },

@@ -2,3 +2,8 @@
   width: 100vw;
   height: calc(100vh - 0px);
 }
+
+.mep-node-editor-retejs-wrapper {
+  width: 80vw;
+  height: calc(100vh - 0px);
+}

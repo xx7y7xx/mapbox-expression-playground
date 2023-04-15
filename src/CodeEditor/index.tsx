@@ -1,21 +1,8 @@
-import React, { useState } from 'react';
-import Expression from '../Expression';
+import React, { useContext, useState } from 'react';
 import { Col, Row } from 'antd';
-
-const defaultFeature = `{
-  "type": "Feature",
-  "properties": {
-    "foo": "bar",
-    "foo2": "bar4"
-  },
-  "geometry": {
-    "coordinates": [
-      103.807773,
-      1.320402
-    ],
-    "type": "Point"
-  }
-}`;
+import { AppContext } from '../AppContext';
+import Expression from '../Expression';
+import { LS_KEY_CODE_EDITOR_EXPRESSION } from '../constants';
 
 const defaultExpression = `['concat',
   ['get', 'foo'],
@@ -24,14 +11,36 @@ const defaultExpression = `['concat',
 ]`;
 
 export default function CodeEditor() {
-  const [feature, setFeature] = useState(localStorage.getItem('mep_code_editor_feature') || defaultFeature);
-  const [expression, setExpression] = useState(localStorage.getItem('mep_code_editor_expression') || defaultExpression);
+  const { geojson, setGeojson } = useContext(AppContext);
+  const [expression, setExpression] = useState(localStorage.getItem(LS_KEY_CODE_EDITOR_EXPRESSION) || defaultExpression);
   const [result, setResult] = useState('');
+
   const handleRun = () => {
-    // eslint-disable-next-line no-eval
-    const result = Expression.parse(eval(expression)).evaluate(JSON.parse(feature));
-    setResult(result);
+    let geojsonObj = null;
+    try {
+      geojsonObj = JSON.parse(geojson);
+    } catch (err) {
+      console.debug('[ERROR] Failed to parse JSON', err);
+    }
+
+    let expr = null;
+    try {
+      // eslint-disable-next-line no-eval
+      expr = eval(expression);
+    } catch (err) {
+      console.debug('[ERROR] Failed to eval expression');
+    }
+
+    if (!geojsonObj) {
+      return;
+    }
+
+    console.debug('CodeEditor Expression.parse', expr);
+    console.debug('CodeEditor Expression.evaluate', geojsonObj);
+    const result = Expression.parse(expr).evaluate(geojsonObj);
+    setResult(String(result));
   };
+
   return (
     <div className='mep-code-editor'>
       <Row>
@@ -50,10 +59,9 @@ export default function CodeEditor() {
               width: '99%',
               height: '400px',
             }}
-            value={feature}
+            value={geojson}
             onChange={(evt) => {
-              setFeature(evt.target.value);
-              localStorage.setItem('mep_geojson', evt.target.value);
+              setGeojson(evt.target.value);
             }}
           ></textarea>
         </Col>
@@ -66,7 +74,7 @@ export default function CodeEditor() {
             value={expression}
             onChange={(evt) => {
               setExpression(evt.target.value);
-              localStorage.setItem('mep_code', evt.target.value);
+              localStorage.setItem(LS_KEY_CODE_EDITOR_EXPRESSION, evt.target.value);
             }}
             onKeyDown={(e) => {
               if (e.metaKey || e.ctrlKey) {
@@ -96,7 +104,7 @@ export default function CodeEditor() {
               height: '300px',
             }}
             readOnly
-            value={result}
+            value={result || ''}
           ></textarea>
         </Col>
       </Row>

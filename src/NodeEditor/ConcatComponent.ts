@@ -60,8 +60,6 @@ export default class ConcatComponent extends Component {
       out = Expression.parse(['concat', ...values]).evaluate();
     }
 
-    console.log('xxx333', inputs, out);
-
     outputs.json = out;
   }
 }

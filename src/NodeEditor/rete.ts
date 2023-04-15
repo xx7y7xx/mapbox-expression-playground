@@ -16,21 +16,10 @@ import ConcatComponent from './ConcatComponent';
 import { loadConfig, reteContextMenuOptions } from './helpers';
 import JsonComponent from './JsonComponent';
 import GetComponent from './GetComponent';
-
-type WindowNodeMapProp = {
-  editor?: NodeEditor;
-  allComponents?: any; // DEPRECATED
-};
-
-declare global {
-  interface Window {
-    ___nodeMap: WindowNodeMapProp;
-  }
-}
+import ResultComponent from './ResultComponent';
 
 export async function createEditor(container: HTMLDivElement) {
   const editor = new Rete.NodeEditor(NODE_EDITOR_ID, container);
-  if (!window.___nodeMap) window.___nodeMap = {};
   window.___nodeMap.editor = editor;
   editor.use(ConnectionPlugin);
   editor.use(ReactRenderPlugin, { createRoot });
@@ -42,6 +31,7 @@ export async function createEditor(container: HTMLDivElement) {
     [ConcatComponent.key]: new ConcatComponent(),
     [GetComponent.key]: new GetComponent(),
     [JsonComponent.key]: new JsonComponent(),
+    [ResultComponent.key]: new ResultComponent(),
   };
   window.___nodeMap.allComponents = allComponents;
   Object.keys(allComponents).forEach((key) => {
@@ -56,7 +46,7 @@ export async function createEditor(container: HTMLDivElement) {
     // @ts-ignore
     'process nodecreated noderemoved connectioncreated connectionremoved',
     async () => {
-      // console.log('process', editor.toJSON());
+      // console.debug('process', editor.toJSON());
       await engine.abort();
       await engine.process(editor.toJSON());
     }
@@ -94,9 +84,17 @@ export function useRete() {
 
   useEffect(() => {
     if (container) {
-      createEditor(container).then((value) => {
-        // console.log('created');
-        editorRef.current = value;
+      createEditor(container).then((editor) => {
+        console.debug('created', editor);
+        editorRef.current = editor;
+
+        editor.on('process', () => {
+          console.debug(
+            'process',
+            editor,
+            editor.nodes.find((n) => n.name === 'Concat')
+          );
+        });
       });
     }
   }, [container]);
@@ -104,7 +102,7 @@ export function useRete() {
   useEffect(
     () => () => {
       if (editorRef.current) {
-        console.log('destroy rete');
+        console.debug('destroy rete');
 
         (editorRef.current as NodeEditor).destroy();
       }
