@@ -6,6 +6,7 @@ import ButtonControl from './ButtonControl';
 import Expression from '../Expression';
 
 const KEY = 'Concat';
+const OUTPUT_KEY = 'json';
 
 export default class ConcatComponent extends Component {
   constructor() {
@@ -24,7 +25,7 @@ export default class ConcatComponent extends Component {
     node.data.inputCount = 0;
 
     const onClick = () => {
-      node.addInput(new Rete.Input(`json${index}`, `JSON ${index}`, objectSocket));
+      node.addInput(new Rete.Input(`json${index}`, `value ${index}`, objectSocket));
       index += 1;
       (node.data.inputCount as number) += 1;
       node.update(); // Rerender ConcatComponent
@@ -33,12 +34,12 @@ export default class ConcatComponent extends Component {
     // Add input
     // @ts-ignore
     [...Array(initCount).keys()].forEach(() => {
-      node.addInput(new Rete.Input(`json${index}`, `JSON ${index}`, objectSocket));
+      node.addInput(new Rete.Input(`json${index}`, `value ${index}`, objectSocket));
       index += 1;
       (node.data.inputCount as number) += 1;
     });
 
-    node.addOutput(new Rete.Output('json', 'JSON', objectSocket)).addControl(
+    node.addOutput(new Rete.Output(OUTPUT_KEY, 'string', objectSocket)).addControl(
       new ButtonControl(this.editor, 'addInputSocket', {
         text: 'Add Input Socket',
         onClick,
@@ -60,6 +61,6 @@ export default class ConcatComponent extends Component {
       out = Expression.parse(['concat', ...values]).evaluate();
     }
 
-    outputs.json = out;
+    outputs[OUTPUT_KEY] = out;
   }
 }

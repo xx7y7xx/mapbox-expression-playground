@@ -17,6 +17,7 @@ import { loadConfig, reteContextMenuOptions } from './helpers';
 import JsonComponent from './JsonComponent';
 import GetComponent from './GetComponent';
 import ResultComponent from './ResultComponent';
+import StringComponent from './StringComponent';
 
 export async function createEditor(container: HTMLDivElement) {
   const editor = new Rete.NodeEditor(NODE_EDITOR_ID, container);
@@ -32,6 +33,7 @@ export async function createEditor(container: HTMLDivElement) {
     [GetComponent.key]: new GetComponent(),
     [JsonComponent.key]: new JsonComponent(),
     [ResultComponent.key]: new ResultComponent(),
+    [StringComponent.key]: new StringComponent(),
   };
   window.___nodeMap.allComponents = allComponents;
   Object.keys(allComponents).forEach((key) => {

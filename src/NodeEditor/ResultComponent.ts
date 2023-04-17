@@ -22,7 +22,7 @@ export default class ResultComponent extends Component {
       return;
     }
 
-    node.addInput(new Rete.Input(INPUT_KEY, 'JSON', objectSocket));
+    node.addInput(new Rete.Input(INPUT_KEY, 'expression', objectSocket));
   }
 
   worker(node: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
