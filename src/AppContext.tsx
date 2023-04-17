@@ -1,9 +1,12 @@
-import { LS_KEY_CODE_EDITOR_GEOJSON } from './constants';
 import { createContext, FC, ReactNode, useState } from 'react';
+import { Feature, FeatureCollection } from 'geojson';
 
+import { LS_KEY_CODE_EDITOR_GEOJSON } from './constants';
+
+export type GeojsonStore = FeatureCollection | Feature | null;
 interface IAppContext {
-  geojson: string;
-  setGeojson: (geojson: string) => void;
+  geojsonObj: GeojsonStore;
+  setGeojsonObj: (geojsonObj: GeojsonStore, geojson: string) => void;
 }
 
 const defaultFeature = `{
@@ -22,26 +25,26 @@ const defaultFeature = `{
 }`;
 
 export const AppContext = createContext<IAppContext>({
-  geojson: '',
-  setGeojson: () => {},
+  geojsonObj: null,
+  setGeojsonObj: () => {},
 });
 
 const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [geojson, setGeojson] = useState(() => {
-    let defaultValue = defaultFeature;
+  const [geojsonObj, setGeojsonObj] = useState(() => {
+    let defaultValue = JSON.parse(defaultFeature);
     if (localStorage.getItem(LS_KEY_CODE_EDITOR_GEOJSON)) {
-      defaultValue = localStorage.getItem(LS_KEY_CODE_EDITOR_GEOJSON)!;
+      defaultValue = JSON.parse(localStorage.getItem(LS_KEY_CODE_EDITOR_GEOJSON)!);
     }
-    window.___nodeMap.geojson = defaultValue;
+    window.___nodeMap.geojsonObj = defaultValue;
     return defaultValue;
   });
 
   const appContext: IAppContext = {
-    geojson,
-    setGeojson: (val) => {
-      setGeojson(val);
-      localStorage.setItem(LS_KEY_CODE_EDITOR_GEOJSON, val);
-      window.___nodeMap.geojson = val;
+    geojsonObj,
+    setGeojsonObj: (val, valStr) => {
+      setGeojsonObj(val);
+      localStorage.setItem(LS_KEY_CODE_EDITOR_GEOJSON, valStr);
+      window.___nodeMap.geojsonObj = val;
     },
   };
 

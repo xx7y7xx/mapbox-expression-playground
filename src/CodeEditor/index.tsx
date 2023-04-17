@@ -1,12 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { Col, Row, Tooltip } from 'antd';
-import { Expression as MapboxExpression } from 'mapbox-gl';
+import { Col, Row, Tooltip, message } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { Feature, FeatureCollection } from 'geojson';
 
 import { AppContext } from '../AppContext';
-import Expression from '../Expression';
-import { LS_KEY_CODE_EDITOR_EXPRESSION } from '../constants';
+import { LS_KEY_CODE_EDITOR_EXPRESSION, LS_KEY_CODE_EDITOR_GEOJSON } from '../constants';
+import { runExpression } from './helpers';
 
 const defaultExpression = `['concat',
   ['get', 'foo'],
@@ -14,62 +12,49 @@ const defaultExpression = `['concat',
   ['string', '123']
 ]`;
 
+const defaultGeojson = `{
+  "type": "Feature",
+  "properties": {
+    "foo": "bar",
+    "foo2": "bar2"
+  },
+  "geometry": {
+    "coordinates": [
+      103.807773,
+      1.320402
+    ],
+    "type": "Point"
+  }
+}`;
+
 export default function CodeEditor() {
-  const { geojson, setGeojson } = useContext(AppContext);
+  const { geojsonObj, setGeojsonObj } = useContext(AppContext);
+  const [geojson, setGeojson] = useState(localStorage.getItem(LS_KEY_CODE_EDITOR_GEOJSON) || defaultGeojson);
   const [expression, setExpression] = useState(localStorage.getItem(LS_KEY_CODE_EDITOR_EXPRESSION) || defaultExpression);
+  const [expressionObj, setExpressionObj] = useState(() => {
+    // eslint-disable-next-line no-eval
+    return eval(localStorage.getItem(LS_KEY_CODE_EDITOR_EXPRESSION) || defaultExpression);
+  });
   const [result, setResult] = useState('');
   const [geojsonError, setGeojsonError] = useState<string | null>(null);
   const [expressionError, setExpressionError] = useState<string | null>(null);
   const [runError, setRunError] = useState<string | null>(null);
 
   const handleRun = () => {
-    let geojsonObj: FeatureCollection | Feature | null = null;
-    try {
-      geojsonObj = JSON.parse(geojson);
-      setGeojsonError(null);
-    } catch (err) {
-      console.debug('[ERROR] Failed to parse JSON', err);
-      setGeojsonError('[ERROR] Failed to parse JSON: ' + (err as Error).message);
-    }
-
-    let expr: MapboxExpression | null = null;
-    try {
-      // eslint-disable-next-line no-eval
-      expr = eval(expression);
-      setExpressionError(null);
-    } catch (err) {
-      console.debug('[ERROR] Failed to eval expression', err);
-      setExpressionError('[ERROR] Failed to eval expression: ' + (err as Error).message);
-    }
-
     if (!geojsonObj) {
-      return;
-    }
-    if (!expr) {
+      message.error('Failed to get GeoJSON before running expression!');
       return;
     }
 
-    console.debug('CodeEditor Expression.parse', expr);
-    console.debug('CodeEditor Expression.evaluate', geojsonObj);
+    if (!expressionObj) {
+      message.error('Failed to get Expression before running expression!');
+      return;
+    }
+
+    setRunError(null);
     try {
-      const fc =
-        geojsonObj.type === 'FeatureCollection'
-          ? geojsonObj
-          : {
-              type: 'FeatureCollection',
-              features: [geojsonObj],
-            };
-      const results: string[] = [];
-
-      fc.features.forEach((f) => {
-        const result = Expression.parse(expr!).evaluate(f);
-        results.push(String(result));
-      });
-
-      setResult(results.join('\n'));
-      setRunError(null);
+      setResult(runExpression(expressionObj, geojsonObj));
     } catch (err) {
-      console.debug('[ERROR] Failed to evaluate expression', err);
       setRunError('[ERROR] Failed to evaluate expression: ' + (err as Error).message);
     }
   };
@@ -112,6 +97,15 @@ export default function CodeEditor() {
             value={geojson}
             onChange={(evt) => {
               setGeojson(evt.target.value);
+
+              setGeojsonError(null);
+              try {
+                const geojsonObj = JSON.parse(evt.target.value);
+                setGeojsonObj(geojsonObj, evt.target.value);
+              } catch (err) {
+                // console.debug('[ERROR] Failed to parse JSON', err);
+                setGeojsonError('[ERROR] Failed to parse JSON: ' + (err as Error).message);
+              }
             }}
             onKeyDown={handleKeyDownToRun}
           ></textarea>
@@ -127,7 +121,18 @@ export default function CodeEditor() {
             value={expression}
             onChange={(evt) => {
               setExpression(evt.target.value);
-              localStorage.setItem(LS_KEY_CODE_EDITOR_EXPRESSION, evt.target.value);
+
+              setExpressionError(null);
+              try {
+                // eslint-disable-next-line no-eval
+                const expr = eval(evt.target.value);
+
+                setExpressionObj(expr);
+                localStorage.setItem(LS_KEY_CODE_EDITOR_EXPRESSION, JSON.stringify(expr));
+              } catch (err) {
+                console.debug('[ERROR] Failed to eval expression', err);
+                setExpressionError('[ERROR] Failed to eval expression: ' + (err as Error).message);
+              }
             }}
             onKeyDown={handleKeyDownToRun}
           ></textarea>

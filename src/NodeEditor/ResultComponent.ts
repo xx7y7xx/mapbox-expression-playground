@@ -1,9 +1,10 @@
+import { message } from 'antd';
 import Rete, { Component, Node } from 'rete';
 import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/types/core/data';
 
 import { objectSocket } from './JsonComponent';
-import Expression from '../Expression';
 import { EVT_SET_RESULT } from '../constants';
+import { runExpression } from '../CodeEditor/helpers';
 
 const KEY = 'Result';
 const INPUT_KEY = 'json';
@@ -32,20 +33,24 @@ export default class ResultComponent extends Component {
       return;
     }
 
-    const { geojson } = window.___nodeMap;
+    const { geojsonObj } = window.___nodeMap;
 
-    if (!geojson) {
-      console.debug('geojson is invalid');
+    if (!geojsonObj) {
+      console.debug('geojson is invalid', geojsonObj);
+      message.error('GeoJSON is invalid, please check it in Code Editor!');
       return;
     }
 
     // eslint-disable-next-line no-eval
     const expr = eval(inputs[INPUT_KEY][0] as string);
-    const geojsonObj = JSON.parse(geojson);
 
-    console.debug('ResultComponent Expression.parse', expr);
-    console.debug('ResultComponent Expression.evaluate', geojsonObj);
-    const result = Expression.parse(expr).evaluate(geojsonObj);
+    let result: string = '';
+    try {
+      result = runExpression(expr, geojsonObj);
+    } catch (err) {
+      console.error('ResultComponent failed to run expression', (err as Error).message);
+      message.error('Failed to run expression');
+    }
 
     window.___nodeMap.emitter.emit(EVT_SET_RESULT, result);
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { NodeEditor as ReteNodeEditor } from 'rete';
 import { Tabs, TabsProps } from 'antd';
 
-import AppProvider from './AppContext';
+import AppProvider, { GeojsonStore } from './AppContext';
 import NodeEditor from './NodeEditor';
 import CodeEditor from './CodeEditor';
 import EventEmitter from './EventEmitter';
@@ -12,7 +12,7 @@ import './App.css';
 type WindowNodeMapProp = {
   editor?: ReteNodeEditor;
   allComponents?: any; // DEPRECATED
-  geojson?: string;
+  geojsonObj?: GeojsonStore;
   emitter?: any;
 };
 
