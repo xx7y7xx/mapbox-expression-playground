@@ -5,9 +5,9 @@ import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/types/core/data';
 import ExpressionControl from './ExpressionControl';
 
 const KEY = 'Get';
-const INPUT_KEY = 'json';
-const OUTPUT_KEY = 'json';
-const CONTROL_KEY_GET = 'get';
+const INPUT_KEY = 'inputKey';
+const OUTPUT_KEY = 'outputKey';
+const CONTROL_KEY_GET = 'controlKeyGet';
 
 export default class GetComponent extends Component {
   constructor() {
@@ -23,16 +23,14 @@ export default class GetComponent extends Component {
       return;
     }
 
-    node
-      .addInput(new Rete.Input(INPUT_KEY, 'string', objectSocket))
-      .addOutput(new Rete.Output(OUTPUT_KEY, 'value', objectSocket))
-      .addControl(new ExpressionControl(this.editor, CONTROL_KEY_GET, node, { label: 'string' }));
+    const input = new Rete.Input(INPUT_KEY, 'string', objectSocket);
+    input.addControl(new ExpressionControl(this.editor, CONTROL_KEY_GET, node));
+
+    node.addInput(input).addOutput(new Rete.Output(OUTPUT_KEY, 'value', objectSocket));
   }
 
   worker(node: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
-    let propertyFieldName = node.data[CONTROL_KEY_GET];
-    propertyFieldName = inputs[INPUT_KEY][0];
-
+    const propertyFieldName = inputs[INPUT_KEY].length ? inputs[INPUT_KEY][0] : node.data[CONTROL_KEY_GET];
     outputs[OUTPUT_KEY] = `['get', '${propertyFieldName}']`;
   }
 }

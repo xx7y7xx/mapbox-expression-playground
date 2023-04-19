@@ -13,6 +13,9 @@ export default function ExpressionField({
   const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
     onChange(evt.target?.value);
   };
+  if (!label) {
+    return <Input value={value} onChange={handleChange} />;
+  }
   return (
     <Row style={{ margin: '4px 0px' }}>
       <Col span={12} style={{ lineHeight: '24px' }}>
