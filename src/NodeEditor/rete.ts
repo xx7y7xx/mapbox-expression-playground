@@ -12,6 +12,7 @@ import AreaPlugin from 'rete-area-plugin';
 import ContextMenuPlugin from 'rete-context-menu-plugin';
 
 import { LS_KEY_NODE_EDITOR_DATA, NODE_EDITOR_ID } from '../constants';
+import AtComponent from './AtComponent';
 import ConcatComponent from './ConcatComponent';
 import { loadConfig, reteContextMenuOptions } from './helpers';
 import JsonComponent from './JsonComponent';
@@ -29,6 +30,7 @@ export async function createEditor(container: HTMLDivElement) {
   const engine = new Rete.Engine(NODE_EDITOR_ID);
 
   const allComponents: any = {
+    [AtComponent.key]: new AtComponent(),
     [ConcatComponent.key]: new ConcatComponent(),
     [GetComponent.key]: new GetComponent(),
     [JsonComponent.key]: new JsonComponent(),
