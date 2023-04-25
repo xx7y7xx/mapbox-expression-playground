@@ -10,6 +10,19 @@ const ARRAY_INPUT_KEY = 'arrayInputKey';
 const OUTPUT_KEY = 'outputKey';
 const CONTROL_KEY_GET = 'controlKeyGet';
 
+type InputType = {
+  type: string;
+  inputKey: string;
+  control?: {
+    comp: typeof InputNumberControl;
+    key: string;
+  };
+};
+type OutputType = {
+  type: string;
+  outputKey: string;
+};
+
 export default class AtComponent extends Component {
   constructor() {
     super(KEY);
@@ -19,22 +32,58 @@ export default class AtComponent extends Component {
   static inputKey = INPUT_KEY;
   static outputKey = OUTPUT_KEY;
 
+  expr: string = 'at';
+  inputs: InputType[] = [];
+  outputs: OutputType[] = [];
+
   async builder(node: Node) {
     if (!this.editor) {
       return;
     }
 
-    const input = new Rete.Input(INPUT_KEY, 'number', objectSocket);
-    input.addControl(new InputNumberControl(this.editor, CONTROL_KEY_GET, node));
+    this.inputs = [
+      { type: 'number', inputKey: INPUT_KEY, control: { comp: InputNumberControl, key: CONTROL_KEY_GET } },
+      { type: 'array', inputKey: ARRAY_INPUT_KEY },
+    ];
+    this.outputs = [{ type: 'ItemType', outputKey: OUTPUT_KEY }];
 
-    const arrayInput = new Rete.Input(ARRAY_INPUT_KEY, 'array', objectSocket);
+    this.inputs.forEach((i) => {
+      const input = new Rete.Input(i.inputKey, i.type, objectSocket);
+      if (i.control) {
+        const InputControl = i.control.comp;
+        input.addControl(new InputControl(this.editor, i.control.key, node));
+      }
+      node.addInput(input);
+    });
 
-    node.addInput(input).addInput(arrayInput).addOutput(new Rete.Output(OUTPUT_KEY, 'ItemType', objectSocket));
+    this.outputs.forEach((o) => {
+      const output = new Rete.Output(o.outputKey, o.type, objectSocket);
+      node.addOutput(output);
+    });
   }
 
   worker(node: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
-    const indexNumber = inputs[INPUT_KEY].length ? inputs[INPUT_KEY][0] : node.data[CONTROL_KEY_GET];
-    const array = inputs[ARRAY_INPUT_KEY][0];
-    outputs[OUTPUT_KEY] = `['at', ${indexNumber},  ${array}]`;
+    const ins: any[] = [];
+    const addIn = (i: InputType, iv: unknown) => {
+      if (i.type === 'string') {
+        ins.push(`'${iv}'`);
+      } else {
+        ins.push(iv);
+      }
+    };
+
+    this.inputs.forEach((i) => {
+      if (inputs[i.inputKey].length) {
+        addIn(i, inputs[i.inputKey][0]);
+      } else if (i.control) {
+        addIn(i, node.data[i.control?.key]);
+      } else {
+        // no input connection, no control, then output a invalid value
+        outputs[OUTPUT_KEY] = null;
+        return;
+      }
+    });
+
+    outputs[OUTPUT_KEY] = `['${this.expr}', ${ins.join(', ')}]`;
   }
 }
