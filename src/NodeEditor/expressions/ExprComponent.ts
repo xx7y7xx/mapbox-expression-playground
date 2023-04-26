@@ -1,9 +1,9 @@
 import Rete, { Component, Node } from 'rete';
 
-import { objectSocket } from './JsonComponent';
+import { objectSocket } from '../JsonComponent';
 import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/types/core/data';
-import InputNumberControl from './InputNumberControl';
-import ExpressionControl from './ExpressionControl';
+import InputNumberControl from '../InputNumberControl';
+import ExpressionControl from '../ExpressionControl';
 
 type InputType = {
   type: string;

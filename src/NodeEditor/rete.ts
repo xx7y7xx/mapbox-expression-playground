@@ -12,13 +12,12 @@ import AreaPlugin from 'rete-area-plugin';
 import ContextMenuPlugin from 'rete-context-menu-plugin';
 
 import { LS_KEY_NODE_EDITOR_DATA, NODE_EDITOR_ID } from '../constants';
-import AtComponent from './AtComponent';
 import ConcatComponent from './ConcatComponent';
 import { loadConfig, reteContextMenuOptions } from './helpers';
 import JsonComponent from './JsonComponent';
-import GetComponent from './GetComponent';
 import ResultComponent from './ResultComponent';
 import StringComponent from './StringComponent';
+import componentMap from './expressions/componentMap';
 
 export async function createEditor(container: HTMLDivElement) {
   const editor = new Rete.NodeEditor(NODE_EDITOR_ID, container);
@@ -30,13 +29,14 @@ export async function createEditor(container: HTMLDivElement) {
   const engine = new Rete.Engine(NODE_EDITOR_ID);
 
   const allComponents: any = {
-    [AtComponent.key]: new AtComponent(),
     [ConcatComponent.key]: new ConcatComponent(),
-    [GetComponent.key]: new GetComponent(),
     [JsonComponent.key]: new JsonComponent(),
     [ResultComponent.key]: new ResultComponent(),
     [StringComponent.key]: new StringComponent(),
   };
+  Object.keys(componentMap).forEach((key) => {
+    allComponents[key] = new componentMap[key]();
+  });
   window.___nodeMap.allComponents = allComponents;
   Object.keys(allComponents).forEach((key) => {
     editor.register(allComponents[key]);
