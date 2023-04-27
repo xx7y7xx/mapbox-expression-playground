@@ -26,7 +26,7 @@ export default class ResultComponent extends Component {
   }
 
   worker(node: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
-    console.debug('ResultComponent inputs[key][0]:', inputs[INPUT_KEY][0]);
+    console.debug('ResultComponent inputs:', inputs);
 
     if (!inputs[INPUT_KEY][0]) {
       console.debug('no input');
@@ -41,8 +41,11 @@ export default class ResultComponent extends Component {
       return;
     }
 
+    const exprStr = inputs[INPUT_KEY][0] as string;
+    console.debug('ResultComponent exprStr:', exprStr);
+
     // eslint-disable-next-line no-eval
-    const expr = eval(inputs[INPUT_KEY][0] as string);
+    const expr = eval(exprStr);
 
     let result: string = '';
     try {
@@ -53,7 +56,7 @@ export default class ResultComponent extends Component {
       message.error('Failed to run expression');
     }
 
-    window.___nodeMap.emitter.emit(EVT_SET_RESULT, result);
+    window.___nodeMap.emitter.emit(EVT_SET_RESULT, exprStr, result);
 
     console.debug('result', result);
   }
