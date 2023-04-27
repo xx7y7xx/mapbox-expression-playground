@@ -3,10 +3,10 @@ import ExpressionControl from '../ExpressionControl';
 
 const exprConfig = [
   {
-    expr: 'at',
+    expr: 'at', // https://github.com/mapbox/mapbox-gl-js/blob/main/src/style-spec/expression/definitions/at.js
     inputs: [
-      { type: 'number', inputKey: 'inputKey', control: { comp: InputNumberControl, key: 'controlKeyGet' } },
-      { type: 'array', inputKey: 'arrayInputKey' },
+      { type: 'number', inputKey: 'index', control: { comp: InputNumberControl, key: 'index' } },
+      { type: 'array', inputKey: 'input' },
     ],
     outputs: [{ type: 'ItemType', outputKey: 'outputKey' }],
   },
