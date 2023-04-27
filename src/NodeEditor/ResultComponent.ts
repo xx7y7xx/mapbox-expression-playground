@@ -26,7 +26,7 @@ export default class ResultComponent extends Component {
   }
 
   worker(node: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
-    console.debug('Result:', inputs[INPUT_KEY][0]);
+    console.debug('ResultComponent inputs[key][0]:', inputs[INPUT_KEY][0]);
 
     if (!inputs[INPUT_KEY][0]) {
       console.debug('no input');
@@ -46,6 +46,7 @@ export default class ResultComponent extends Component {
 
     let result: string = '';
     try {
+      console.debug('ResultComponent to run expr:', expr);
       result = runExpression(expr, geojsonObj);
     } catch (err) {
       console.error('ResultComponent failed to run expression', (err as Error).message);

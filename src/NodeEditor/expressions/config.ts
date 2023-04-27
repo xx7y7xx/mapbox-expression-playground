@@ -20,6 +20,11 @@ const exprConfig = [
     inputs: [{ type: 'string', inputKey: 'propertyFieldName', control: { comp: ExpressionControl, key: 'propertyFieldName' } }],
     outputs: [{ type: 'boolean', outputKey: 'has' }],
   },
+  {
+    expr: 'string',
+    inputs: [{ type: 'value', inputKey: 'value', control: { comp: ExpressionControl, key: 'value' } }],
+    outputs: [{ type: 'string', outputKey: 'value' }],
+  },
 ];
 
 export default exprConfig;

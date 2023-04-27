@@ -16,7 +16,6 @@ import ConcatComponent from './ConcatComponent';
 import { loadConfig, reteContextMenuOptions } from './helpers';
 import JsonComponent from './JsonComponent';
 import ResultComponent from './ResultComponent';
-import StringComponent from './StringComponent';
 import componentMap from './expressions/componentMap';
 
 export async function createEditor(container: HTMLDivElement) {
@@ -32,7 +31,6 @@ export async function createEditor(container: HTMLDivElement) {
     [ConcatComponent.key]: new ConcatComponent(),
     [JsonComponent.key]: new JsonComponent(),
     [ResultComponent.key]: new ResultComponent(),
-    [StringComponent.key]: new StringComponent(),
   };
   Object.keys(componentMap).forEach((key) => {
     allComponents[key] = new componentMap[key]();
