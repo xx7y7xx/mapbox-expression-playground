@@ -1,6 +1,6 @@
 {
   "short_name": "Mapbox Expression Playground",
-  "name": "Mapbox Expression Playground",
+  "name": "Mapbox Expression Playground is a web-based tool for visualizing and experimenting with Mapbox GL expressions.",
   "icons": [
     {
       "src": "favicon.ico",

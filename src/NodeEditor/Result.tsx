@@ -8,7 +8,7 @@ const Result: React.FC = () => {
   const [exprStr, setExprStr] = useState('');
 
   useEffect(() => {
-    const unsubscribe = window.___nodeMap.emitter.on(EVT_SET_RESULT, (arg1: string, arg2: string) => {
+    const unsubscribe = window.___mapboxExpressionPlayground.emitter.on(EVT_SET_RESULT, (arg1: string, arg2: string) => {
       setExprStr(arg1);
       setResult(arg2);
     });

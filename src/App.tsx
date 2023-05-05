@@ -14,15 +14,16 @@ type WindowNodeMapProp = {
   allComponents?: any; // DEPRECATED
   geojsonObj?: GeojsonStore;
   emitter?: any;
+  examples?: any;
 };
 
 declare global {
   interface Window {
-    ___nodeMap: WindowNodeMapProp;
+    ___mapboxExpressionPlayground: WindowNodeMapProp;
   }
 }
 
-window.___nodeMap = {
+window.___mapboxExpressionPlayground = {
   emitter: new EventEmitter(),
 };
 

@@ -17,10 +17,11 @@ import { loadConfig, reteContextMenuOptions } from './helpers';
 import JsonComponent from './JsonComponent';
 import ResultComponent from './ResultComponent';
 import componentMap from './expressions/componentMap';
+import createExamples from './createExamples';
 
 export async function createEditor(container: HTMLDivElement) {
   const editor = new Rete.NodeEditor(NODE_EDITOR_ID, container);
-  window.___nodeMap.editor = editor;
+  window.___mapboxExpressionPlayground.editor = editor;
   editor.use(ConnectionPlugin);
   editor.use(ReactRenderPlugin, { createRoot });
   editor.use(ContextMenuPlugin, reteContextMenuOptions);
@@ -35,7 +36,7 @@ export async function createEditor(container: HTMLDivElement) {
   Object.keys(componentMap).forEach((key) => {
     allComponents[key] = new componentMap[key]();
   });
-  window.___nodeMap.allComponents = allComponents;
+  window.___mapboxExpressionPlayground.allComponents = allComponents;
   Object.keys(allComponents).forEach((key) => {
     editor.register(allComponents[key]);
     engine.register(allComponents[key]);
@@ -97,6 +98,8 @@ export function useRete() {
             editor.nodes.find((n) => n.name === 'Concat')
           );
         });
+
+        createExamples(editor);
       });
     }
   }, [container]);

@@ -35,7 +35,7 @@ const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
     if (localStorage.getItem(LS_KEY_CODE_EDITOR_GEOJSON)) {
       defaultValue = JSON.parse(localStorage.getItem(LS_KEY_CODE_EDITOR_GEOJSON)!);
     }
-    window.___nodeMap.geojsonObj = defaultValue;
+    window.___mapboxExpressionPlayground.geojsonObj = defaultValue;
     return defaultValue;
   });
 
@@ -44,7 +44,7 @@ const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
     setGeojsonObj: (val, valStr) => {
       setGeojsonObj(val);
       localStorage.setItem(LS_KEY_CODE_EDITOR_GEOJSON, valStr);
-      window.___nodeMap.geojsonObj = val;
+      window.___mapboxExpressionPlayground.geojsonObj = val;
     },
   };
 

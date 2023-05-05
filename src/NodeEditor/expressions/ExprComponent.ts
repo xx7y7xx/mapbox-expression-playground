@@ -43,18 +43,19 @@ export default abstract class ExprComponent extends Component {
     });
   }
 
-  worker(node: NodeData, inputs: WorkerInputs, outputs: WorkerOutputs) {
+  worker(node: NodeData, dataInputs: WorkerInputs, outputs: WorkerOutputs) {
     const { outputKey } = this.outputs[0];
 
     const args: any[] = [];
 
-    this.inputs.forEach((i) => {
-      if (inputs[i.inputKey].length) {
+    this.inputs.forEach((input) => {
+      if (dataInputs[input.inputKey].length) {
         // this node has input connection, use expr from input node
-        args.push(inputs[i.inputKey][0]);
-      } else if (i.control) {
+        args.push(dataInputs[input.inputKey][0]);
+      } else if (input.control) {
         // this node has no input connection, use control(e.g. input box) value
-        args.push(`'${node.data[i.control?.key]}'`);
+        const controlVal = node.data[input.control?.key];
+        args.push(input.type === 'number' ? controlVal : `'${controlVal}'`);
       } else {
         // no input connection, no control, then output a invalid value
         // TODO deal with no connection case

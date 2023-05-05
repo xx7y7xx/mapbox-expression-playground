@@ -33,7 +33,7 @@ export default class ResultComponent extends Component {
       return;
     }
 
-    const { geojsonObj } = window.___nodeMap;
+    const { geojsonObj } = window.___mapboxExpressionPlayground;
 
     if (!geojsonObj) {
       console.debug('geojson is invalid', geojsonObj);
@@ -56,7 +56,7 @@ export default class ResultComponent extends Component {
       message.error('Failed to run expression');
     }
 
-    window.___nodeMap.emitter.emit(EVT_SET_RESULT, exprStr, result);
+    window.___mapboxExpressionPlayground.emitter.emit(EVT_SET_RESULT, exprStr, result);
 
     console.debug('result', result);
   }

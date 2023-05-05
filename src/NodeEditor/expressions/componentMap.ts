@@ -1,11 +1,11 @@
 import ExprComponent from './ExprComponent';
-import exprConfig from './config';
+import exprConfigs from './config';
 
 // Define the object that maps the exported component classes
 const componentMap: { [key: string]: new () => ExprComponent } = {};
 
 // Create component classes in a loop
-exprConfig.forEach((ec) => {
+exprConfigs.forEach((ec) => {
   const component = class extends ExprComponent {
     constructor() {
       super(ec.expr);
