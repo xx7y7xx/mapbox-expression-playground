@@ -1,7 +1,7 @@
 import { NodeEditor } from 'rete';
 import ResultComponent from './ResultComponent';
 import componentMap from './expressions/componentMap';
-import exprConfigs, { ExprCfgType } from './expressions/config';
+import exprConfigs, { ExprCfgType } from './expressions/configs';
 
 const delay = (millis: number = 2000): Promise<void> =>
   new Promise((resolve, reject) => {
@@ -12,11 +12,18 @@ const delay = (millis: number = 2000): Promise<void> =>
  * How to run examples:
  * ```
  * window.___mapboxExpressionPlayground.examples.at();
- * for (const key in window.___mapboxExpressionPlayground.examples) { await window.___mapboxExpressionPlayground.examples[key](); }
+ * window.___mapboxExpressionPlayground.runExamples();
  * ```
  */
 const createExamples = (editor: NodeEditor) => {
   window.___mapboxExpressionPlayground.examples = {};
+  window.___mapboxExpressionPlayground.runExamples = async () => {
+    console.debug('Run example start');
+    for (const key in window.___mapboxExpressionPlayground.examples) {
+      await window.___mapboxExpressionPlayground.examples[key]();
+    }
+    console.debug('Run example end');
+  };
 
   const createInputNode = async (key: string, exprConfig: ExprCfgType) => {
     const nodeOpts: any = {};

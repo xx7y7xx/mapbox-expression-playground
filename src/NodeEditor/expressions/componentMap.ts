@@ -1,5 +1,5 @@
 import ExprComponent from './ExprComponent';
-import exprConfigs from './config';
+import exprConfigs from './configs';
 
 // Define the object that maps the exported component classes
 const componentMap: { [key: string]: new () => ExprComponent } = {};

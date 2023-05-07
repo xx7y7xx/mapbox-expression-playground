@@ -2,20 +2,14 @@ import Rete, { Component, Node } from 'rete';
 
 import { objectSocket } from '../JsonComponent';
 import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/types/core/data';
-import InputNumberControl from '../InputNumberControl';
-import ExpressionControl from '../ExpressionControl';
 
-type InputType = {
-  type: string;
-  inputKey: string;
-  control?: {
-    comp: typeof InputNumberControl | typeof ExpressionControl;
-    key: string;
-  };
-};
-type OutputType = {
-  type: string;
-  outputKey: string;
+import { InputType, InputTypeType, OutputType } from './configs';
+
+const typeToInputTitle = (inputType: InputTypeType) => {
+  if (typeof inputType === 'object') {
+    return inputType.join(' | ');
+  }
+  return inputType;
 };
 
 export default abstract class ExprComponent extends Component {
@@ -29,7 +23,7 @@ export default abstract class ExprComponent extends Component {
     }
 
     this.inputs.forEach((i) => {
-      const input = new Rete.Input(i.inputKey, i.type, objectSocket);
+      const input = new Rete.Input(i.inputKey, typeToInputTitle(i.inputType), objectSocket);
       if (i.control) {
         const InputControl = i.control.comp;
         input.addControl(new InputControl(this.editor, i.control.key, node));
@@ -55,7 +49,7 @@ export default abstract class ExprComponent extends Component {
       } else if (input.control) {
         // this node has no input connection, use control(e.g. input box) value
         const controlVal = node.data[input.control?.key];
-        args.push(input.type === 'number' ? controlVal : `'${controlVal}'`);
+        args.push(input.inputType === 'number' ? controlVal : `'${controlVal}'`);
       } else {
         // no input connection, no control, then output a invalid value
         // TODO deal with no connection case

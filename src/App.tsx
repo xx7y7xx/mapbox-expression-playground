@@ -15,6 +15,7 @@ type WindowNodeMapProp = {
   geojsonObj?: GeojsonStore;
   emitter?: any;
   examples?: any;
+  runExamples?: () => void;
 };
 
 declare global {
