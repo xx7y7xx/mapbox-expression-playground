@@ -11,7 +11,7 @@ export type InputType = {
   inputKey: string;
   control?: {
     comp: typeof InputNumberControl | typeof ExpressionControl;
-    key: string;
+    ctrlKey: string;
     exampleValue: number | string;
   };
 };
@@ -31,7 +31,7 @@ const exprConfigs: ExprCfgType[] = [
   {
     expr: 'at', // https://github.com/mapbox/mapbox-gl-js/blob/main/src/style-spec/expression/definitions/at.js
     inputs: [
-      { inputType: 'number', inputKey: 'index', control: { comp: InputNumberControl, key: 'index', exampleValue: 0 } },
+      { inputType: 'number', inputKey: 'index', control: { comp: InputNumberControl, ctrlKey: 'index', exampleValue: 0 } },
       { inputType: 'array', inputKey: 'input' },
     ],
     outputs: [{ type: 'ItemType', outputKey: 'outputKey' }],
@@ -42,7 +42,7 @@ const exprConfigs: ExprCfgType[] = [
       {
         inputType: 'string',
         inputKey: 'inputKey',
-        control: { comp: ExpressionControl, key: 'controlKeyGet', exampleValue: 'foo' },
+        control: { comp: ExpressionControl, ctrlKey: 'controlKeyGet', exampleValue: 'foo' },
       },
     ],
     outputs: [{ type: 'value', outputKey: 'outputKey' }],
@@ -53,7 +53,7 @@ const exprConfigs: ExprCfgType[] = [
       {
         inputType: 'string',
         inputKey: 'propertyFieldName',
-        control: { comp: ExpressionControl, key: 'propertyFieldName', exampleValue: 'foo' },
+        control: { comp: ExpressionControl, ctrlKey: 'propertyFieldName', exampleValue: 'foo' },
       },
     ],
     outputs: [{ type: 'boolean', outputKey: 'has' }],
@@ -61,11 +61,11 @@ const exprConfigs: ExprCfgType[] = [
   {
     expr: 'in',
     inputs: [
-      { inputType: 'string', inputKey: 'keyword', control: { comp: ExpressionControl, key: 'keyword', exampleValue: 'foo' } },
+      { inputType: 'string', inputKey: 'keyword', control: { comp: ExpressionControl, ctrlKey: 'keyword', exampleValue: 'foo' } },
       {
         inputType: ['array', 'string'],
         inputKey: 'input',
-        control: { comp: ExpressionControl, key: 'input', exampleValue: 'foobar' },
+        control: { comp: ExpressionControl, ctrlKey: 'input', exampleValue: 'foobar' },
       },
     ],
     outputs: [{ type: 'boolean', outputKey: 'result' }],
@@ -73,11 +73,11 @@ const exprConfigs: ExprCfgType[] = [
   {
     expr: 'index-of',
     inputs: [
-      { inputType: 'string', inputKey: 'keyword', control: { comp: ExpressionControl, key: 'keyword', exampleValue: 'bar' } },
+      { inputType: 'string', inputKey: 'keyword', control: { comp: ExpressionControl, ctrlKey: 'keyword', exampleValue: 'bar' } },
       {
         inputType: ['array', 'string'],
         inputKey: 'input',
-        control: { comp: ExpressionControl, key: 'input', exampleValue: 'foobar' },
+        control: { comp: ExpressionControl, ctrlKey: 'input', exampleValue: 'foobar' },
       },
     ],
     outputs: [{ type: 'number', outputKey: 'result' }],
@@ -88,7 +88,7 @@ const exprConfigs: ExprCfgType[] = [
       {
         inputType: 'string',
         inputKey: 'input',
-        control: { comp: ExpressionControl, key: 'controlKeyInput', exampleValue: 'foo' },
+        control: { comp: ExpressionControl, ctrlKey: 'controlKeyInput', exampleValue: 'foo' },
       },
     ],
     outputs: [{ type: 'number', outputKey: 'outputKey' }],
@@ -99,15 +99,17 @@ const exprConfigs: ExprCfgType[] = [
       {
         inputType: 'string',
         inputKey: 'input',
-        control: { comp: ExpressionControl, key: 'input', exampleValue: 'foo' },
+        control: { comp: ExpressionControl, ctrlKey: 'input', exampleValue: 'foo' },
       },
-      { inputType: 'number', inputKey: 'index', control: { comp: InputNumberControl, key: 'index', exampleValue: 1 } },
+      { inputType: 'number', inputKey: 'index', control: { comp: InputNumberControl, ctrlKey: 'index', exampleValue: 1 } },
     ],
     outputs: [{ type: 'string', outputKey: 'outputKey' }],
   },
   {
     expr: 'string',
-    inputs: [{ inputType: 'value', inputKey: 'value', control: { comp: ExpressionControl, key: 'value', exampleValue: 'foo' } }],
+    inputs: [
+      { inputType: 'value', inputKey: 'value', control: { comp: ExpressionControl, ctrlKey: 'value', exampleValue: 'foo' } },
+    ],
     outputs: [{ type: 'string', outputKey: 'value' }],
   },
 ];

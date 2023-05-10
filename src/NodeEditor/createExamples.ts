@@ -29,7 +29,7 @@ const createExamples = (editor: NodeEditor) => {
     const nodeOpts: any = {};
     for (const input of exprConfig.inputs || []) {
       if (input.control) {
-        nodeOpts[input.control.key] = input.control.exampleValue;
+        nodeOpts[input.control.ctrlKey] = input.control.exampleValue;
       }
     }
     return window.___mapboxExpressionPlayground.allComponents[key].createNode(nodeOpts);

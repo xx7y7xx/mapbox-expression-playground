@@ -26,7 +26,7 @@ export default abstract class ExprComponent extends Component {
       const input = new Rete.Input(i.inputKey, typeToInputTitle(i.inputType), objectSocket);
       if (i.control) {
         const InputControl = i.control.comp;
-        input.addControl(new InputControl(this.editor, i.control.key, node));
+        input.addControl(new InputControl(this.editor, i.control.ctrlKey, node));
       }
       node.addInput(input);
     });
@@ -48,7 +48,7 @@ export default abstract class ExprComponent extends Component {
         args.push(dataInputs[input.inputKey][0]);
       } else if (input.control) {
         // this node has no input connection, use control(e.g. input box) value
-        const controlVal = node.data[input.control?.key];
+        const controlVal = node.data[input.control?.ctrlKey];
         args.push(input.inputType === 'number' ? controlVal : `'${controlVal}'`);
       } else {
         // no input connection, no control, then output a invalid value
