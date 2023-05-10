@@ -21,14 +21,15 @@ export default abstract class ExprComponent extends Component {
 
   async builder(node: Node) {
     if (!this.editor) {
+      console.error('ExprComponent: editor is not defined');
       return;
     }
 
-    this.config.inputs.forEach((i) => {
-      const input = new Rete.Input(i.inputKey, typeToInputTitle(i.inputType), objectSocket);
-      if (i.control) {
-        const InputControl = i.control.comp;
-        input.addControl(new InputControl(this.editor, i.control.ctrlKey, node));
+    this.config.inputs.forEach(({ inputKey, inputType, control }) => {
+      const input = new Rete.Input(inputKey, typeToInputTitle(inputType), objectSocket);
+      if (control) {
+        const InputControl = control.comp;
+        input.addControl(new InputControl(this.editor, control.ctrlKey, node));
       }
       node.addInput(input);
     });
@@ -39,29 +40,29 @@ export default abstract class ExprComponent extends Component {
     });
   }
 
-  worker(node: NodeData, dataInputs: WorkerInputs, outputs: WorkerOutputs) {
+  worker(node: NodeData, dataInputs: WorkerInputs, dataOutputs: WorkerOutputs) {
     const { outputKey } = this.config.outputs[0];
 
     const args: any[] = [];
 
-    this.config.inputs.forEach((input) => {
-      if (dataInputs[input.inputKey].length) {
+    this.config.inputs.forEach(({ inputKey, inputType, control }) => {
+      if (dataInputs[inputKey].length) {
         // this node has input connection, use expr from input node
-        args.push(dataInputs[input.inputKey][0]);
-      } else if (input.control) {
+        args.push(dataInputs[inputKey][0]);
+      } else if (control) {
         // this node has no input connection, use control(e.g. input box) value
-        const controlVal = node.data[input.control?.ctrlKey];
-        args.push(input.inputType === 'number' ? controlVal : `'${controlVal}'`);
+        const controlVal = node.data[control?.ctrlKey];
+        args.push(inputType === 'number' ? controlVal : `'${controlVal}'`);
       } else {
         // no input connection, no control, then output a invalid value
         // TODO deal with no connection case
-        outputs[outputKey] = null;
+        dataOutputs[outputKey] = null;
         return;
       }
     });
 
     const out = `['${this.expr}', ${args.join(', ')}]`;
     console.debug('ExprComponent out:', out);
-    outputs[outputKey] = out;
+    dataOutputs[outputKey] = out;
   }
 }
