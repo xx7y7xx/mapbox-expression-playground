@@ -17,7 +17,7 @@ export type InputType = {
 };
 
 export type OutputType = {
-  type: string;
+  outputType: string;
   outputKey: string;
 };
 
@@ -34,7 +34,7 @@ const exprConfigs: ExprCfgType[] = [
       { inputType: 'number', inputKey: 'index', control: { comp: InputNumberControl, ctrlKey: 'index', exampleValue: 0 } },
       { inputType: 'array', inputKey: 'input' },
     ],
-    outputs: [{ type: 'ItemType', outputKey: 'outputKey' }],
+    outputs: [{ outputType: 'ItemType', outputKey: 'outputKey' }],
   },
   {
     expr: 'get',
@@ -45,7 +45,7 @@ const exprConfigs: ExprCfgType[] = [
         control: { comp: ExpressionControl, ctrlKey: 'controlKeyGet', exampleValue: 'foo' },
       },
     ],
-    outputs: [{ type: 'value', outputKey: 'outputKey' }],
+    outputs: [{ outputType: 'value', outputKey: 'outputKey' }],
   },
   {
     expr: 'has',
@@ -56,7 +56,7 @@ const exprConfigs: ExprCfgType[] = [
         control: { comp: ExpressionControl, ctrlKey: 'propertyFieldName', exampleValue: 'foo' },
       },
     ],
-    outputs: [{ type: 'boolean', outputKey: 'has' }],
+    outputs: [{ outputType: 'boolean', outputKey: 'has' }],
   },
   {
     expr: 'in',
@@ -68,7 +68,7 @@ const exprConfigs: ExprCfgType[] = [
         control: { comp: ExpressionControl, ctrlKey: 'input', exampleValue: 'foobar' },
       },
     ],
-    outputs: [{ type: 'boolean', outputKey: 'result' }],
+    outputs: [{ outputType: 'boolean', outputKey: 'result' }],
   },
   {
     expr: 'index-of',
@@ -80,7 +80,7 @@ const exprConfigs: ExprCfgType[] = [
         control: { comp: ExpressionControl, ctrlKey: 'input', exampleValue: 'foobar' },
       },
     ],
-    outputs: [{ type: 'number', outputKey: 'result' }],
+    outputs: [{ outputType: 'number', outputKey: 'result' }],
   },
   {
     expr: 'length',
@@ -91,7 +91,7 @@ const exprConfigs: ExprCfgType[] = [
         control: { comp: ExpressionControl, ctrlKey: 'controlKeyInput', exampleValue: 'foo' },
       },
     ],
-    outputs: [{ type: 'number', outputKey: 'outputKey' }],
+    outputs: [{ outputType: 'number', outputKey: 'outputKey' }],
   },
   {
     expr: 'slice',
@@ -103,14 +103,14 @@ const exprConfigs: ExprCfgType[] = [
       },
       { inputType: 'number', inputKey: 'index', control: { comp: InputNumberControl, ctrlKey: 'index', exampleValue: 1 } },
     ],
-    outputs: [{ type: 'string', outputKey: 'outputKey' }],
+    outputs: [{ outputType: 'string', outputKey: 'outputKey' }],
   },
   {
     expr: 'string',
     inputs: [
       { inputType: 'value', inputKey: 'value', control: { comp: ExpressionControl, ctrlKey: 'value', exampleValue: 'foo' } },
     ],
-    outputs: [{ type: 'string', outputKey: 'value' }],
+    outputs: [{ outputType: 'string', outputKey: 'value' }],
   },
 ];
 

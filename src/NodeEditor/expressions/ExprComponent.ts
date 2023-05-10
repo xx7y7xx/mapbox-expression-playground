@@ -32,7 +32,7 @@ export default abstract class ExprComponent extends Component {
     });
 
     this.outputs.forEach((o) => {
-      const output = new Rete.Output(o.outputKey, o.type, objectSocket);
+      const output = new Rete.Output(o.outputKey, o.outputType, objectSocket);
       node.addOutput(output);
     });
   }
