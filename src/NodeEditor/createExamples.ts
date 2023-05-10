@@ -57,6 +57,13 @@ const createExamples = (editor: NodeEditor) => {
 
       editor.connect(inputNode.outputs.get(exprConfig.outputs[0].outputKey), resultNode.inputs.get(ResultComponent.inputKey));
 
+      if (exprConfig.expectResult) {
+        await delay();
+
+        const actualResult = document.querySelector('.mep-expression-result-textarea')?.textContent;
+        console.assert(actualResult === exprConfig.expectResult, '%o', { actualResult, key });
+      }
+
       await delay();
     };
   });

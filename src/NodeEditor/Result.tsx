@@ -23,7 +23,12 @@ const Result: React.FC = () => {
       Expression:
       <textarea style={{ width: '90%', height: '20%' }} value={exprStr} readOnly />
       Result:
-      <textarea style={{ width: '90%', height: '80%' }} value={result || ''} readOnly />
+      <textarea
+        className='mep-expression-result-textarea'
+        style={{ width: '90%', height: '80%' }}
+        value={result || ''}
+        readOnly
+      />
     </div>
   );
 };

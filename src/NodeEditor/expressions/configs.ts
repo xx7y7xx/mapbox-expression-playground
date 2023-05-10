@@ -25,6 +25,7 @@ export type ExprCfgType = {
   expr: string;
   inputs: InputType[];
   outputs: OutputType[];
+  expectResult?: string;
 };
 
 const exprConfigs: ExprCfgType[] = [
@@ -46,6 +47,7 @@ const exprConfigs: ExprCfgType[] = [
       },
     ],
     outputs: [{ outputType: 'value', outputKey: 'outputKey' }],
+    expectResult: 'bar\nbar2',
   },
   {
     expr: 'has',
