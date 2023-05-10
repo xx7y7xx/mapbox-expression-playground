@@ -14,8 +14,10 @@ exprConfigs.forEach((ec) => {
     static key = ec.expr;
     expr = ec.expr;
 
-    inputs = ec.inputs;
-    outputs = ec.outputs;
+    config = {
+      inputs: ec.inputs,
+      outputs: ec.outputs,
+    };
   };
   // Add the component class to the map object
   componentMap[ec.expr] = component;

@@ -14,15 +14,17 @@ const typeToInputTitle = (inputType: InputTypeType) => {
 
 export default abstract class ExprComponent extends Component {
   abstract expr: string;
-  abstract inputs: InputType[];
-  abstract outputs: OutputType[];
+  abstract config: {
+    inputs: InputType[];
+    outputs: OutputType[];
+  };
 
   async builder(node: Node) {
     if (!this.editor) {
       return;
     }
 
-    this.inputs.forEach((i) => {
+    this.config.inputs.forEach((i) => {
       const input = new Rete.Input(i.inputKey, typeToInputTitle(i.inputType), objectSocket);
       if (i.control) {
         const InputControl = i.control.comp;
@@ -31,18 +33,18 @@ export default abstract class ExprComponent extends Component {
       node.addInput(input);
     });
 
-    this.outputs.forEach((o) => {
+    this.config.outputs.forEach((o) => {
       const output = new Rete.Output(o.outputKey, o.outputType, objectSocket);
       node.addOutput(output);
     });
   }
 
   worker(node: NodeData, dataInputs: WorkerInputs, outputs: WorkerOutputs) {
-    const { outputKey } = this.outputs[0];
+    const { outputKey } = this.config.outputs[0];
 
     const args: any[] = [];
 
-    this.inputs.forEach((input) => {
+    this.config.inputs.forEach((input) => {
       if (dataInputs[input.inputKey].length) {
         // this node has input connection, use expr from input node
         args.push(dataInputs[input.inputKey][0]);
