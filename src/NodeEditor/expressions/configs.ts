@@ -71,6 +71,41 @@ const exprConfigs: ExprCfgType[] = [
     outputs: [{ type: 'boolean', outputKey: 'result' }],
   },
   {
+    expr: 'index-of',
+    inputs: [
+      { inputType: 'string', inputKey: 'keyword', control: { comp: ExpressionControl, key: 'keyword', exampleValue: 'bar' } },
+      {
+        inputType: ['array', 'string'],
+        inputKey: 'input',
+        control: { comp: ExpressionControl, key: 'input', exampleValue: 'foobar' },
+      },
+    ],
+    outputs: [{ type: 'number', outputKey: 'result' }],
+  },
+  {
+    expr: 'length',
+    inputs: [
+      {
+        inputType: 'string',
+        inputKey: 'input',
+        control: { comp: ExpressionControl, key: 'controlKeyInput', exampleValue: 'foo' },
+      },
+    ],
+    outputs: [{ type: 'number', outputKey: 'outputKey' }],
+  },
+  {
+    expr: 'slice',
+    inputs: [
+      {
+        inputType: 'string',
+        inputKey: 'input',
+        control: { comp: ExpressionControl, key: 'input', exampleValue: 'foo' },
+      },
+      { inputType: 'number', inputKey: 'index', control: { comp: InputNumberControl, key: 'index', exampleValue: 1 } },
+    ],
+    outputs: [{ type: 'string', outputKey: 'outputKey' }],
+  },
+  {
     expr: 'string',
     inputs: [{ inputType: 'value', inputKey: 'value', control: { comp: ExpressionControl, key: 'value', exampleValue: 'foo' } }],
     outputs: [{ type: 'string', outputKey: 'value' }],
