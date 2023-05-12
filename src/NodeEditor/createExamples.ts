@@ -1,7 +1,8 @@
 import { NodeEditor } from 'rete';
 import ResultComponent from './ResultComponent';
 import componentMap from './expressions/exprComponentMap';
-import exprConfigMap, { ExprCfgType } from './expressions/exprConfigMap';
+import { ExprCfgType } from './expressions/types';
+import exprConfigMap from './expressions/exprConfigMap';
 
 const delay = (millis: number = 2000): Promise<void> =>
   new Promise((resolve, reject) => {

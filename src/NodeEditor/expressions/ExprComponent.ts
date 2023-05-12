@@ -1,9 +1,8 @@
 import Rete, { Component, Node } from 'rete';
-
-import { objectSocket } from '../JsonComponent';
 import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/types/core/data';
 
-import { ExprName, InputType, InputTypeType, OutputType } from './exprConfigMap';
+import { objectSocket } from '../JsonComponent';
+import { ExprName, InputType, InputTypeType, OutputType } from './types';
 
 const typeToInputTitle = (inputType: InputTypeType) => {
   if (typeof inputType === 'object') {
