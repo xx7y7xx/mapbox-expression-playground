@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/mapbox-expression-playground/static/css/main.b926febf.css",
+    "main.js": "/mapbox-expression-playground/static/js/main.21b0835b.js",
+    "static/js/787.bed30488.chunk.js": "/mapbox-expression-playground/static/js/787.bed30488.chunk.js",
+    "index.html": "/mapbox-expression-playground/index.html",
+    "main.b926febf.css.map": "/mapbox-expression-playground/static/css/main.b926febf.css.map",
+    "main.21b0835b.js.map": "/mapbox-expression-playground/static/js/main.21b0835b.js.map",
+    "787.bed30488.chunk.js.map": "/mapbox-expression-playground/static/js/787.bed30488.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b926febf.css",
+    "static/js/main.21b0835b.js"
+  ]
+}
