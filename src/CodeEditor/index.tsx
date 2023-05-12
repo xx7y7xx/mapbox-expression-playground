@@ -125,10 +125,10 @@ export default function CodeEditor() {
               setExpressionError(null);
               try {
                 // eslint-disable-next-line no-eval
-                const expr = eval(evt.target.value);
+                const exprObj = eval(evt.target.value);
 
-                setExpressionObj(expr);
-                localStorage.setItem(LS_KEY_CODE_EDITOR_EXPRESSION, JSON.stringify(expr));
+                setExpressionObj(exprObj);
+                localStorage.setItem(LS_KEY_CODE_EDITOR_EXPRESSION, JSON.stringify(exprObj));
               } catch (err) {
                 console.debug('[ERROR] Failed to eval expression', err);
                 setExpressionError('[ERROR] Failed to eval expression: ' + (err as Error).message);

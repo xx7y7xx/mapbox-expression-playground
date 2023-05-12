@@ -1,7 +1,7 @@
 import { NodeEditor } from 'rete';
 import ResultComponent from './ResultComponent';
-import componentMap from './expressions/componentMap';
-import exprConfigs, { ExprCfgType } from './expressions/configs';
+import componentMap from './expressions/exprComponentMap';
+import exprConfigMap, { ExprCfgType } from './expressions/exprConfigMap';
 
 const delay = (millis: number = 2000): Promise<void> =>
   new Promise((resolve, reject) => {
@@ -19,34 +19,30 @@ const createExamples = (editor: NodeEditor) => {
   window.___mapboxExpressionPlayground.examples = {};
   window.___mapboxExpressionPlayground.runExamples = async () => {
     console.debug('Run example start');
-    for (const key in window.___mapboxExpressionPlayground.examples) {
-      await window.___mapboxExpressionPlayground.examples[key]();
+    for (const exprName in window.___mapboxExpressionPlayground.examples) {
+      await window.___mapboxExpressionPlayground.examples[exprName]();
     }
     console.debug('Run example end');
   };
 
-  const createInputNode = async (key: string, exprConfig: ExprCfgType) => {
+  const createInputNode = async (exprName: string, exprConfig: ExprCfgType) => {
     const nodeOpts: any = {};
     for (const input of exprConfig.inputs || []) {
       if (input.control) {
         nodeOpts[input.control.ctrlKey] = input.control.exampleValue;
       }
     }
-    return window.___mapboxExpressionPlayground.allComponents[key].createNode(nodeOpts);
+    return window.___mapboxExpressionPlayground.allComponents[exprName].createNode(nodeOpts);
   };
 
-  Object.keys(componentMap).forEach((key) => {
-    // allComponents[key] = new componentMap[key]();
-    window.___mapboxExpressionPlayground.examples[key] = async () => {
+  Object.keys(componentMap).forEach((exprName) => {
+    // allComponents[exprName] = new componentMap[exprName]();
+    window.___mapboxExpressionPlayground.examples[exprName] = async () => {
       editor.clear();
 
-      const exprConfig = exprConfigs.find((e) => e.expr === key);
-      if (!exprConfig) {
-        console.error('No config found for expression', key);
-        return;
-      }
+      const exprConfig = exprConfigMap[exprName];
 
-      const inputNode = await createInputNode(key, exprConfig);
+      const inputNode = await createInputNode(exprName, exprConfig);
 
       inputNode.position = [0, 0];
       editor.addNode(inputNode);
@@ -61,7 +57,7 @@ const createExamples = (editor: NodeEditor) => {
         await delay();
 
         const actualResult = document.querySelector('.mep-expression-result-textarea')?.textContent;
-        console.assert(actualResult === exprConfig.expectResult, '%o', { actualResult, key });
+        console.assert(actualResult === exprConfig.expectResult, '%o', { actualResult, exprName });
       }
 
       await delay();
@@ -75,7 +71,7 @@ const createExamples = (editor: NodeEditor) => {
   window.___mapboxExpressionPlayground.examples['at'] = async () => {
     editor.clear();
 
-    const exprConfig = exprConfigs.find((e) => e.expr === 'at');
+    const exprConfig = exprConfigMap['at'];
     if (!exprConfig) {
       console.error('No config found for expression', 'at');
       return;
@@ -90,10 +86,7 @@ const createExamples = (editor: NodeEditor) => {
     editor.addNode(getNode);
     editor.addNode(atNode);
     editor.addNode(resultNode);
-    editor.connect(
-      getNode.outputs.get('outputKey'),
-      atNode.inputs.get(exprConfigs.find((e) => e.expr === 'at')?.inputs[1].inputKey)
-    );
+    editor.connect(getNode.outputs.get('outputKey'), atNode.inputs.get(exprConfig.inputs[1].inputKey));
     editor.connect(atNode.outputs.get('outputKey'), resultNode.inputs.get(ResultComponent.inputKey));
 
     await delay();

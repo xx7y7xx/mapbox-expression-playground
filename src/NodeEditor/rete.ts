@@ -16,7 +16,7 @@ import ConcatComponent from './ConcatComponent';
 import { loadConfig, reteContextMenuOptions } from './helpers';
 import JsonComponent from './JsonComponent';
 import ResultComponent from './ResultComponent';
-import componentMap from './expressions/componentMap';
+import exprComponentMap from './expressions/exprComponentMap';
 import createExamples from './createExamples';
 
 export async function createEditor(container: HTMLDivElement) {
@@ -33,8 +33,8 @@ export async function createEditor(container: HTMLDivElement) {
     [JsonComponent.key]: new JsonComponent(),
     [ResultComponent.key]: new ResultComponent(),
   };
-  Object.keys(componentMap).forEach((key) => {
-    allComponents[key] = new componentMap[key]();
+  Object.keys(exprComponentMap).forEach((exprName) => {
+    allComponents[exprName] = new exprComponentMap[exprName]();
   });
   window.___mapboxExpressionPlayground.allComponents = allComponents;
   Object.keys(allComponents).forEach((key) => {

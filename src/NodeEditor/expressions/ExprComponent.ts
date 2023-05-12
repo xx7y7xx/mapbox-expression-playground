@@ -3,7 +3,7 @@ import Rete, { Component, Node } from 'rete';
 import { objectSocket } from '../JsonComponent';
 import { NodeData, WorkerInputs, WorkerOutputs } from 'rete/types/core/data';
 
-import { InputType, InputTypeType, OutputType } from './configs';
+import { ExprName, InputType, InputTypeType, OutputType } from './exprConfigMap';
 
 const typeToInputTitle = (inputType: InputTypeType) => {
   if (typeof inputType === 'object') {
@@ -13,7 +13,7 @@ const typeToInputTitle = (inputType: InputTypeType) => {
 };
 
 export default abstract class ExprComponent extends Component {
-  abstract expr: string;
+  abstract exprName: ExprName;
   abstract config: {
     inputs: InputType[];
     outputs: OutputType[];
@@ -61,7 +61,7 @@ export default abstract class ExprComponent extends Component {
       }
     });
 
-    const out = `['${this.expr}', ${args.join(', ')}]`;
+    const out = `['${this.exprName}', ${args.join(', ')}]`;
     console.debug('ExprComponent out:', out);
     dataOutputs[outputKey] = out;
   }

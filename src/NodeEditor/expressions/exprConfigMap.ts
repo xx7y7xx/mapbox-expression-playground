@@ -22,23 +22,23 @@ export type OutputType = {
 };
 
 export type ExprCfgType = {
-  expr: string;
   inputs: InputType[];
   outputs: OutputType[];
   expectResult?: string;
 };
 
-const exprConfigs: ExprCfgType[] = [
-  {
-    expr: 'at', // https://github.com/mapbox/mapbox-gl-js/blob/main/src/style-spec/expression/definitions/at.js
+export type ExprName = string;
+
+const exprConfigMap: { [exprName: ExprName]: ExprCfgType } = {
+  // https://github.com/mapbox/mapbox-gl-js/blob/main/src/style-spec/expression/definitions/at.js
+  at: {
     inputs: [
       { inputType: 'number', inputKey: 'index', control: { comp: InputNumberControl, ctrlKey: 'index', exampleValue: 0 } },
       { inputType: 'array', inputKey: 'input' },
     ],
     outputs: [{ outputType: 'ItemType', outputKey: 'outputKey' }],
   },
-  {
-    expr: 'get',
+  get: {
     inputs: [
       {
         inputType: 'string',
@@ -49,8 +49,7 @@ const exprConfigs: ExprCfgType[] = [
     outputs: [{ outputType: 'value', outputKey: 'outputKey' }],
     expectResult: 'bar\nbar2',
   },
-  {
-    expr: 'has',
+  has: {
     inputs: [
       {
         inputType: 'string',
@@ -60,8 +59,7 @@ const exprConfigs: ExprCfgType[] = [
     ],
     outputs: [{ outputType: 'boolean', outputKey: 'has' }],
   },
-  {
-    expr: 'in',
+  in: {
     inputs: [
       { inputType: 'string', inputKey: 'keyword', control: { comp: ExpressionControl, ctrlKey: 'keyword', exampleValue: 'foo' } },
       {
@@ -72,8 +70,7 @@ const exprConfigs: ExprCfgType[] = [
     ],
     outputs: [{ outputType: 'boolean', outputKey: 'result' }],
   },
-  {
-    expr: 'index-of',
+  'index-of': {
     inputs: [
       { inputType: 'string', inputKey: 'keyword', control: { comp: ExpressionControl, ctrlKey: 'keyword', exampleValue: 'bar' } },
       {
@@ -84,8 +81,7 @@ const exprConfigs: ExprCfgType[] = [
     ],
     outputs: [{ outputType: 'number', outputKey: 'result' }],
   },
-  {
-    expr: 'length',
+  length: {
     inputs: [
       {
         inputType: 'string',
@@ -95,8 +91,7 @@ const exprConfigs: ExprCfgType[] = [
     ],
     outputs: [{ outputType: 'number', outputKey: 'outputKey' }],
   },
-  {
-    expr: 'slice',
+  slice: {
     inputs: [
       {
         inputType: 'string',
@@ -107,13 +102,12 @@ const exprConfigs: ExprCfgType[] = [
     ],
     outputs: [{ outputType: 'string', outputKey: 'outputKey' }],
   },
-  {
-    expr: 'string',
+  string: {
     inputs: [
       { inputType: 'value', inputKey: 'value', control: { comp: ExpressionControl, ctrlKey: 'value', exampleValue: 'foo' } },
     ],
     outputs: [{ outputType: 'string', outputKey: 'value' }],
   },
-];
+};
 
-export default exprConfigs;
+export default exprConfigMap;
